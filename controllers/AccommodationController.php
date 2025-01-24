@@ -6,15 +6,15 @@ class AccommodationController
 {
     public static function handleRequest()
     {
-        $action = $_REQUEST['action'] ?? null;
+        $action = $_REQUEST['action'] ?? 'index';
 
-        if (!isset($_SESSION['id_user']) || !isset($_SESSION['role'])) {
-            header("Location: ../views/auth/login.php");
-            exit();
+        if (isset($_SESSION['id_user']) && isset($_SESSION['role'])) {
+            //header("Location: ../controllers/AccommodationController.php?action=index");
+            //(../controllers/AccommodationController.php?action=index)
+            $userId = $_SESSION['id_user'];
+            $role = $_SESSION['role'];
         }
-
-        $userId = $_SESSION['id_user'];
-        $role = $_SESSION['role'];
+        
         $accommodationModel = new Accommodation();
 
         switch ($action) {
@@ -39,7 +39,7 @@ class AccommodationController
                 break;
 
             default:
-                header("Location: ../views/index.php");
+                header("Location: ../controllers/AccommodationController.php?action=index");
                 exit();
         }
     }
@@ -49,20 +49,17 @@ class AccommodationController
         // Obtener todos los alojamientos
         $accommodations = $accommodationModel->getAll();
 
-        // Pasar alojamientos a la vista a través de la sesión
-        $_SESSION['all_accommodations'] = $accommodations;
-
-        // Redirigir a la página principal (index.php)
-        header("Location: /index.php");
+        // Incluir la vista para pasar datos
+        include '../views/accommodations/index.php';
         exit();
     }
-    
+
     private static function listAccommodationsUser($accommodationModel, $userId, $role)
     {
         if ($role == 'user') {
             $accommodations = $accommodationModel->getByUser($userId, $role);
-            $_SESSION['accommodations'] = $accommodations;
-            header("Location: ../views/users/account.php");
+            //$_SESSION['accommodations'] = $accommodations;
+            include "../views/users/user_dashboard.php";
         } else {
             echo "No tienes permisos para ver alojamientos.";
         }
@@ -85,7 +82,7 @@ class AccommodationController
 
         if ($accommodationModel->addAccommodationToUser($data)) {
             echo "Alojamiento agregado exitosamente.";
-            header("Location: ../views/users/account.php");
+            header("Location: ../controllers/AccommodationController.php?action=index");
         } else {
             echo "Error al agregar alojamiento.";
         }
@@ -108,7 +105,7 @@ class AccommodationController
 
         if ($accommodationModel->removeAccommodationFromUser($data)) {
             echo "Alojamiento eliminado exitosamente.";
-            header("Location: ../views/users/account.php");
+            header("Location: ../controllers/AccommodationController.php?action=list");
         } else {
             echo "Error al eliminar alojamiento.";
         }
@@ -138,7 +135,8 @@ class AccommodationController
 
             if ($accommodationModel->create($data)) {
                 echo "Alojamiento creado exitosamente.";
-                header("Location: ../views/users/admin.php");
+                //header("Location: ../views/users/admin.php");
+                header("Location: ./index.php");
             } else {
                 echo "Error al crear el alojamiento.";
             }

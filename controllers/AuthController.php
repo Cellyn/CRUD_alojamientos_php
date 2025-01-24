@@ -38,10 +38,13 @@ class AuthController
             $userModel = new User();
             $isLoggedIn = $userModel->login($email, $password);
 
-            if ($isLoggedIn) {
-                // Redirigir al usuario a su cuenta
-                header("Location: ../views/users/account.php");
+            if ($isLoggedIn && ($_SESSION['role'] === "admin")) {
+                // Redirigir al admin al index
+                header("Location: ../controllers/AccommodationController.php?action=index");
                 exit();
+            }else if ($isLoggedIn && ($_SESSION['role'] === "user")) {
+                // Redirigir al usuario a su cuenta
+                header("Location: ../controllers/AccommodationController.php?action=list");
             } else {
                 // Redirigir al login con un mensaje de error
                 header("Location: ../views/auth/login.php?error=1");
@@ -55,7 +58,7 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'logout') {
             session_unset();
             session_destroy();
-            header("Location: ../views/auth/login.php");
+            header("Location: ../controllers/AccommodationController.php?action=index");
             exit();
         }
     }

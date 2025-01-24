@@ -1,34 +1,54 @@
 <?php
-require_once '../controllers/AccommodationController.php';
 require_once '../controllers/AuthController.php';
+require_once '../controllers/AccommodationController.php';
 
-$authController = new AuthController();
-$accommodationController = new AccommodationController();
+// Obtener la acción desde la URL
+$action = $_GET['action'] ?? 'home'; // Acción predeterminada: 'home'
+$controller = $_GET['controller'] ?? 'accommodation'; // Controlador predeterminado: 'accommodation'
 
-session_start();
+// Rutas disponibles
+/*switch ($controller) {
+    case 'auth':
+        switch ($action) {
+            case 'login':
+                AuthController::login();
+                break;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($_GET['action'] === 'login') {
-        $authController->login($_POST);
-    } elseif ($_GET['action'] === 'register') {
-        $authController->register($_POST);
-    } elseif ($_GET['action'] === 'store') {
-        $accommodationController->store($_POST);
-    }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if ($_GET['action'] === 'login') {
-        $authController->showLogin();
-    } elseif ($_GET['action'] === 'register') {
-        $authController->showRegister();
-    } elseif ($_GET['action'] === 'logout') {
-        $authController->logout();
-    } elseif ($_GET['action'] === 'create') {
-        $accommodationController->create();
-    } elseif ($_GET['action'] === 'edit') {
-        $accommodationController->edit($_GET['id']);
-    } elseif ($_GET['action'] === 'delete') {
-        $accommodationController->delete($_GET['id']);
-    } else {
-        $accommodationController->index();
-    }
-}
+            case 'logout':
+                AuthController::logout();
+                break;
+
+            case 'register':
+                AuthController::register();
+                break;
+
+            default:
+                echo "Acción no válida para el controlador Auth.";
+                break;
+        }
+        break;
+
+    case 'accommodation':
+        switch ($action) {
+            case 'listAllAccommodations':
+                AccommodationController::listAllAccommodations();
+                break;
+
+            case 'addAccommodation':
+                AccommodationController::addAccommodationToUser();
+                break;
+
+            case 'removeAccommodation':
+                AccommodationController::removeAccommodation();
+                break;
+
+            default:
+                echo "Acción no válida para el controlador Accommodation.";
+                break;
+        }
+        break;
+
+    default:
+        echo "Controlador no válido.";
+        break;
+}*/
