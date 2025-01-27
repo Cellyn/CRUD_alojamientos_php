@@ -1,5 +1,4 @@
 <?php
-//session_start();
 $isLoggedIn = isset($_SESSION['id_user']); // Verifica si el usuario está autenticado
 $userName = $isLoggedIn ? $_SESSION['user'] : ''; // Nombre del usuario si está logueado
 $userRole = $isLoggedIn ? $_SESSION['role'] : ''; // Rol del usuario logueado

@@ -20,12 +20,12 @@
         <div class="row">
             <?php if ($userRole == "admin"): ?>
                 <div class="col-md-4 mb-4">
-                <a class="btn btn-primary" href="../views/accommodations/add_accommodation.php" role="button"><i class="bi bi-plus-circle pe-1"></i>Nuevo Alojamiento</a>
-            </div>
+                    <a class="btn btn-primary" href="../views/accommodations/add_accommodation.php" role="button"><i class="bi bi-plus-circle pe-1"></i>Nuevo Alojamiento</a>
+                </div>
             <?php endif; ?>
         </div>
         <!-- Mensaje que se mostrará al agregar un alojamiento a la cuenta de usuario -->
-        <?php 
+        <?php
         if (isset($_SESSION['message'])) {
             $message = $_SESSION['message'];
             echo "<script>
@@ -53,13 +53,13 @@
                                 <p class="text-success">Precio: $<?= htmlspecialchars($accommodation['price']) ?> por noche</p>
                             </div>
                             <?php if ($userRole === "user"): ?>
-                            <div class="card-footer">
+                                <div class="card-footer">
                                     <!-- Formulario para agregar alojamiento a la cuenta de -->
                                     <form action="../controllers/AccommodationController.php?action=add" method="POST">
                                         <input type="hidden" name="accommodation_id" value="<?php echo $accommodation['id']; ?>">
                                         <button type="submit" class="btn btn-primary"><i class="bi bi-heart-fill pe-1"></i>Agregar a mi cuenta</button>
                                     </form>
-                            </div>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -70,13 +70,13 @@
                         <h5 class="card-title text-muted">
                             <i class="bi bi-exclamation-circle text-danger"></i> ¡No hay alojamientos disponibles.!
                         </h5>
-                        <p class="card-text">Agrega nuevos alojamientos.</p>
                     </div>
                 </div>
             <?php endif; ?>
         </div>
     </div>
-    <?php //include '../views/layouts/footer.php'; ?>
+    <?php //include '../views/layouts/footer.php'; 
+    ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

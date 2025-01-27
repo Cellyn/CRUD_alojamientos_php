@@ -160,7 +160,7 @@ class AccommodationController
                 'location' => $_POST['location'] ?? '',
                 'description' => $_POST['description'] ?? '',
                 'price' => $_POST['price'] ?? '',
-                'image_url' => $_POST['image_url'] ?? '',
+                'image_url' => !empty($_POST['image_url']) ? $_POST['image_url'] : 'https://res.cloudinary.com/dpo0d4fre/image/upload/v1736783357/casa_luna_ys6dnk.jpg',
                 'role' => $role,
             ];
 

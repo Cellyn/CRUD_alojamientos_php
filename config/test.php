@@ -16,13 +16,13 @@ if ($users) {
     echo "</pre>";
 } else {
     echo "No se encontraron usuarios.";
-}
+} */
 
 //encriptar contraseña
 echo "<hr>";
-echo password_hash('12345678', PASSWORD_BCRYPT); */
+echo password_hash('12345', PASSWORD_BCRYPT); 
 
-$accommodationModel = new Accommodation();
+/*$accommodationModel = new Accommodation();
 $accommodation = $accommodationModel->getAll();
 
 if ($accommodation) {
@@ -32,3 +32,4 @@ if ($accommodation) {
 } else {
     echo "No se encontraron alojamientos.";
 }
+*/
