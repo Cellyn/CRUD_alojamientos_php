@@ -9,12 +9,10 @@ class AccommodationController
         $action = $_REQUEST['action'] ?? 'index';
 
         if (isset($_SESSION['id_user']) && isset($_SESSION['role'])) {
-            //header("Location: ../controllers/AccommodationController.php?action=index");
-            //(../controllers/AccommodationController.php?action=index)
             $userId = $_SESSION['id_user'];
             $role = $_SESSION['role'];
         }
-        
+
         $accommodationModel = new Accommodation();
 
         switch ($action) {
@@ -58,7 +56,6 @@ class AccommodationController
     {
         if ($role == 'user') {
             $accommodations = $accommodationModel->getByUser($userId, $role);
-            //$_SESSION['accommodations'] = $accommodations;
             include "../views/users/user_dashboard.php";
         } else {
             echo "No tienes permisos para ver alojamientos.";
@@ -70,10 +67,25 @@ class AccommodationController
         $accommodationId = $_POST['accommodation_id'] ?? null;
 
         if (!$accommodationId) {
-            echo "ID de alojamiento no proporcionado.";
-            return;
+            $_SESSION['message'] = [
+                'title' => 'ID de alojamiento no proporcionado.',
+                'icon' => 'error'
+            ];
+            header("Location: ../controllers/AccommodationController.php?action=index");
+            exit();
         }
 
+        // Verificamos si el alojamiento ya está en la cuenta
+        if ($accommodationModel->isAccommodationAdded($userId, $accommodationId)) {
+            $_SESSION['message'] = [
+                'title' => '¡Este alojamiento ya está añadido a tu cuenta.!',
+                'icon' => 'warning'
+            ];
+            header("Location: ../controllers/AccommodationController.php?action=index");
+            exit();
+        }
+
+        // Si no está entonces lo agregamos
         $data = [
             'userId' => $userId,
             'accommodationId' => $accommodationId,
@@ -81,10 +93,19 @@ class AccommodationController
         ];
 
         if ($accommodationModel->addAccommodationToUser($data)) {
-            echo "Alojamiento agregado exitosamente.";
+            $_SESSION['message'] = [
+                'title' => '¡Alojamiento agregado exitosamente!',
+                'icon' => 'success'
+            ];
             header("Location: ../controllers/AccommodationController.php?action=index");
+            exit();
         } else {
-            echo "Error al agregar alojamiento.";
+            $_SESSION['message'] = [
+                'title' => '¡Error al agregar alojamiento!',
+                'icon' => 'error'
+            ];
+            header("Location: ../controllers/AccommodationController.php?action=index");
+            exit();
         }
     }
 
@@ -93,8 +114,12 @@ class AccommodationController
         $accommodationId = $_POST['accommodation_id'] ?? null;
 
         if (!$accommodationId) {
-            echo "ID de alojamiento no proporcionado.";
-            return;
+            $_SESSION['message'] = [
+                'title' => 'ID de alojamiento no proporcionado.',
+                'icon' => 'error'
+            ];
+            header("Location: ../controllers/AccommodationController.php?action=list");
+            exit();
         }
 
         $data = [
@@ -104,10 +129,21 @@ class AccommodationController
         ];
 
         if ($accommodationModel->removeAccommodationFromUser($data)) {
-            echo "Alojamiento eliminado exitosamente.";
+            $_SESSION['message'] = [
+                'title' => 'Alojamiento eliminado exitosamente!',
+                'icon' => 'success'
+            ];
+
             header("Location: ../controllers/AccommodationController.php?action=list");
+            exit();
         } else {
-            echo "Error al eliminar alojamiento.";
+            $_SESSION['message'] = [
+                'title' => 'Error al eliminar alojamiento!',
+                'icon' => 'error'
+            ];
+
+            header("Location: ../controllers/AccommodationController.php?action=list");
+            exit();
         }
     }
 
@@ -129,16 +165,31 @@ class AccommodationController
             ];
 
             if (empty($data['name']) || empty($data['location']) || empty($data['description']) || empty($data['price']) || empty($data['image_url'])) {
-                echo "Por favor, completa todos los campos.";
-                return;
+                $_SESSION['message'] = [
+                    'title' => 'Por favor complete los campos requeridos',
+                    'icon' => 'error'
+                ];
+
+                header("Location: ../views/accommodations/add_accommodation.php");
+                exit();
             }
 
             if ($accommodationModel->create($data)) {
-                echo "Alojamiento creado exitosamente.";
-                //header("Location: ../views/users/admin.php");
-                header("Location: ./index.php");
+                $_SESSION['message'] = [
+                    'title' => 'Nuevo alojamiento guardado!',
+                    'icon' => 'success'
+                ];
+
+                header("Location: ../controllers/AccommodationController.php?action=index");
+                exit();
             } else {
-                echo "Error al crear el alojamiento.";
+                $_SESSION['message'] = [
+                    'title' => 'Error al guardar alojamiento!',
+                    'icon' => 'error'
+                ];
+
+                header("Location: ../views/accommodations/add_accommodation.php");
+                exit();
             }
         }
     }

@@ -87,6 +87,25 @@ class Accommodation
         }
     }
 
+    // Verificar si el alojamiento ya existe en la cuenta del usuario
+    public function isAccommodationAdded($userId, $accommodationId)
+    {
+        try {
+            $query = "SELECT COUNT(*) as count FROM user_accommodations 
+        WHERE id_user = :userId AND id_accommodation = :accommodationId";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $stmt->bindParam(':accommodationId', $accommodationId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['count'] > 0; // Retorna true si el alojamiento ya está añadido
+        } catch (PDOException $e) {
+            echo "Error al verificar alojamiento en su cuenta de usuario: " . $e->getMessage();
+            return false;
+        }
+    }
+
     // Agregar un alojamiento al usuario
     public function addAccommodationToUser($data)
     {

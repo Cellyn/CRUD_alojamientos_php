@@ -46,8 +46,13 @@ class AuthController
                 // Redirigir al usuario a su cuenta
                 header("Location: ../controllers/AccommodationController.php?action=list");
             } else {
-                // Redirigir al login con un mensaje de error
-                header("Location: ../views/auth/login.php?error=1");
+                $_SESSION['message'] = [
+                    'title' => 'Credenciales incorrectas!',
+                    'text' => 'Por favor verifique su correo y contraseña!',
+                    'icon' => 'error'
+                ];
+        
+                header("Location: ../views/auth/login.php");
                 exit();
             }
         }

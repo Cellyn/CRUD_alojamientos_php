@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Alojamientos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- css Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- iconos Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- script sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -15,10 +20,26 @@
         <div class="row">
             <?php if ($userRole == "admin"): ?>
                 <div class="col-md-4 mb-4">
-                <a class="btn btn-primary" href="../views/accommodations/add_accommodation.php" role="button">Nuevo Alojamiento</a>
+                <a class="btn btn-primary" href="../views/accommodations/add_accommodation.php" role="button"><i class="bi bi-plus-circle pe-1"></i>Nuevo Alojamiento</a>
             </div>
             <?php endif; ?>
         </div>
+        <!-- Mensaje que se mostrará al agregar un alojamiento a la cuenta de usuario -->
+        <?php 
+        if (isset($_SESSION['message'])) {
+            $message = $_SESSION['message'];
+            echo "<script>
+                    Swal.fire({
+                        position: 'top-end',
+                        title: '{$message['title']}',
+                        icon: '{$message['icon']}',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                  </script>";
+            unset($_SESSION['message']); // Limpia la sesión
+        }
+        ?>
         <div class="row">
             <?php if (!empty($accommodations)): ?>
                 <?php foreach ($accommodations as $accommodation): ?>
@@ -36,7 +57,7 @@
                                     <!-- Formulario para agregar alojamiento a la cuenta de -->
                                     <form action="../controllers/AccommodationController.php?action=add" method="POST">
                                         <input type="hidden" name="accommodation_id" value="<?php echo $accommodation['id']; ?>">
-                                        <button type="submit" class="btn btn-primary">Agregar a mi cuenta</button>
+                                        <button type="submit" class="btn btn-primary"><i class="bi bi-heart-fill pe-1"></i>Agregar a mi cuenta</button>
                                     </form>
                             </div>
                             <?php endif; ?>
@@ -44,7 +65,14 @@
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p class="text-center">No hay alojamientos disponibles.</p>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted">
+                            <i class="bi bi-exclamation-circle text-danger"></i> ¡No hay alojamientos disponibles.!
+                        </h5>
+                        <p class="card-text">Agrega nuevos alojamientos.</p>
+                    </div>
+                </div>
             <?php endif; ?>
         </div>
     </div>
